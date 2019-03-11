@@ -4,7 +4,8 @@ import { findDOMNode } from 'react-dom';
 
 import Card from './DraggableCard';
 import { CARD_HEIGHT, CARD_MARGIN, OFFSET_HEIGHT } from '../../../constants.js';
-
+import { makeCard } from '../../../actions/lists.js';
+const galPng = require('../../../assets/images/gal.png');
 
 function getPlaceholderIndex(y, scrollY) {
   // shift placeholder if y position more than card height / 2
@@ -104,12 +105,47 @@ export default class Cards extends Component {
     };
   }
 
+  isMatch(cardList) {
+    //console.log(cardList);
+    let cardl = cardList.filter(value => {
+      //console.log("Filter: ", value.key);
+      return (value.key == 5 || value.key == 7 || value.key == 6)
+    })
+    if ( cardl.length == 3) return true;
+    cardl = cardList.filter((value) => {
+      return (value.key == 1 || value.key == 6 )
+    })
+    if ( cardl.length == 2) return true;
+    cardl = cardList.filter((value) => {
+      return (value.key == 3 || value.key == 6 )
+    })
+    if ( cardl.length == 2) return true;
+    cardl = cardList.filter((value) => {
+      return (value.key == 2 || value.key == 6  || value.key == 9)
+    })
+    if ( cardl.length == 3) return true;
+    cardl = cardList.filter((value) => {
+      return (value.key == 4 || value.key == 6  || value.key == 9)
+    })
+    if ( cardl.length == 3) return true;
+    cardl = cardList.filter((value) => {
+      return (value.key == 2 || value.key == 6  || value.key == 9)
+    })
+    if ( cardl.length == 3) return true;  
+    cardl = cardList.filter((value) => {
+      return (value.key == 10 || value.key == 6  || value.key == 8 || value.key == 9)
+    })
+    if ( cardl.length == 4) return true;
+    return false;
+  }
+
   render() {
     const { connectDropTarget, x, cards, isOver, canDrop } = this.props;
     const { placeholderIndex } = this.state;
 
     let isPlaceHold = false;
     let cardList = [];
+    let className = "desk-items";
     cards.forEach((item, i) => {
       if (isOver && canDrop) {
         isPlaceHold = false;
@@ -127,6 +163,17 @@ export default class Cards extends Component {
             stopScrolling={this.props.stopScrolling}
           />
         );
+        if (this.isMatch(cardList)) {
+          console.log("cardlist: ", cardList);
+          const itemGreen = makeCard(25,galPng,"Match", "Data matcht met aanvraag!");
+          cardList.push(
+            <Card x={x} y={i+1}
+              item={itemGreen}
+              key={item.id + 50}
+              stopScrolling={this.props.stopScrolling}
+            />
+          );
+        }
       }
       if (isOver && canDrop && placeholderIndex === i) {
         cardList.push(<div key="placeholder" className="item placeholder" />);
@@ -144,9 +191,11 @@ export default class Cards extends Component {
     }
 
     return connectDropTarget(
-      <div className="desk-items">
+      <div className={className}>
         {cardList}
       </div>
     );
+    
+
   }
 }

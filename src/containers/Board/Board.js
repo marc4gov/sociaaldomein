@@ -42,7 +42,7 @@ export default class Board extends Component {
   }
 
   componentWillMount() {
-    this.props.getLists(10);
+    this.props.getLists(2);
   }
 
   startScrolling(direction) {

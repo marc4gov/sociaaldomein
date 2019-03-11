@@ -1,35 +1,82 @@
-import faker from 'faker';
-
 export const GET_LISTS_START = 'GET_LISTS_START';
 export const GET_LISTS = 'GET_LISTS';
 export const MOVE_CARD = 'MOVE_CARD';
 export const MOVE_LIST = 'MOVE_LIST';
 export const TOGGLE_DRAGGING = 'TOGGLE_DRAGGING';
 
+const wmoPng = require('../assets/images/wmo.png');
+const uwvPng = require('../assets/images/uwv.png');
+const idPng = require('../assets/images/id.png');
+const partnerPng = require('../assets/images/partner.png');
+const gezinPng = require('../assets/images/gezin.png');
+const cvPng = require('../assets/images/cv.png');
+const emptyPng = require('../assets/images/empty.png');
+
+export function makeCard(id, img, title, text, gals = [emptyPng], dels = [emptyPng] ) {
+  return {
+    id: id,
+    img: img,
+    title: title,
+    text: text,
+    gals: gals,
+    dels: dels
+    // idimg: idPng,
+    // partner: partnerPng,
+    // gezin: gezinPng
+  }
+}
+
+function getCards(listType) {
+  const cards = [];
+  switch(listType) {
+    case "inkomen": {
+      cards.push(makeCard(1, uwvPng, "Aanvraag Bijstand", "Alleenstaand", [idPng], [partnerPng, gezinPng, cvPng]));
+      cards.push(makeCard(2, uwvPng, "Aanvraag Bijstand", "Gezamenlijk", [idPng, partnerPng], [gezinPng, cvPng]));
+      cards.push(makeCard(3, uwvPng, "Aanvraag Ioaw", "Alleenstaand", [idPng], [partnerPng, gezinPng, cvPng]));
+      cards.push(makeCard(4, uwvPng, "Aanvraag Ioaw", "Gezamenlijk", [idPng, partnerPng], [gezinPng, cvPng]));
+      break;
+    };
+    case "werk": {
+      cards.push(makeCard(5, cvPng, "Inschrijven werk.nl", "CV uploaden", [idPng, cvPng], [partnerPng, gezinPng]));
+      break;     
+    };
+    case "persoon": {
+      cards.push(makeCard(6, idPng, "ID kaart", "nodig voor alles"));
+      cards.push(makeCard(7, cvPng, "Curriculum Vitae", "nodig voor werk"));
+      cards.push(makeCard(8, gezinPng, "Gezinssituatie", "nodig voor aanvraag bijstand"));
+      cards.push(makeCard(9, partnerPng, "Partner", "nodig voor aanvraag"));
+      break;     
+    };
+    case "wmo": {
+      cards.push(makeCard(10, wmoPng, "Aanvraag WMO", "Gezin", [idPng, partnerPng, gezinPng], [cvPng]));
+      break;
+    }    
+    default: {
+      cards.push(makeCard(11, wmoPng, "Aanvraag WMO", "Alleenstaand"));
+      break;
+    }
+
+  }
+  return cards;
+}
+
+
 export function getLists(quantity) {
   return dispatch => {
     dispatch({ type: GET_LISTS_START, quantity });
     setTimeout(() => {
       const lists = [];
-      let count = 0;
-      for (let i = 0; i < quantity; i++) {
-        const cards = [];
-        const randomQuantity = Math.floor(Math.random() * (9 - 1 + 1)) + 1;
-        for (let ic = 0; ic < randomQuantity; ic++) {
-          cards.push({
-            id: count,
-            firstName: faker.name.firstName(),
-            lastName: faker.name.lastName(),
-            title: faker.name.jobTitle()
-          });
-          count = count + 1;
-        }
-        lists.push({
-          id: i,
-          name: faker.commerce.productName(),
-          cards
-        });
-      }
+      let cards = getCards("persoon");
+      lists.push({id: 1, name: "Persoon", cards});
+      cards = getCards("werk");
+      lists.push({id: 2, name: "Werk", cards});
+      cards = getCards("inkomen");
+      lists.push({id: 3, name: "Inkomen", cards});
+      cards = getCards("wmo");
+      lists.push({id: 4, name: "Zorg-WMO", cards});
+      cards = [];
+      lists.push({id: 5, name: "Match bord", cards});
+
       dispatch({ type: GET_LISTS, lists, isFetching: true });
     }, 1000); // fake delay
     dispatch({ type: GET_LISTS_START, isFetching: false });
