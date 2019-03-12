@@ -117,15 +117,11 @@ export default class Cards extends Component {
     })
     if ( cardl.length == 2) return true;
     cardl = cardList.filter((value) => {
-      return (value.key == 3 || value.key == 6 )
-    })
-    if ( cardl.length == 2) return true;
-    cardl = cardList.filter((value) => {
-      return (value.key == 2 || value.key == 6  || value.key == 9)
+      return (value.key == 3 || value.key == 6  || value.key == 10)
     })
     if ( cardl.length == 3) return true;
     cardl = cardList.filter((value) => {
-      return (value.key == 4 || value.key == 6  || value.key == 9)
+      return (value.key == 2 || value.key == 6  || value.key == 9)
     })
     if ( cardl.length == 3) return true;
     cardl = cardList.filter((value) => {
@@ -133,9 +129,13 @@ export default class Cards extends Component {
     })
     if ( cardl.length == 3) return true;  
     cardl = cardList.filter((value) => {
-      return (value.key == 10 || value.key == 6  || value.key == 8 || value.key == 9)
+      return (value.key == 11 || value.key == 6  || value.key == 8 || value.key == 9)
     })
     if ( cardl.length == 4) return true;
+    cardl = cardList.filter((value) => {
+      return (value.key == 12 || value.key == 6  || value.key == 8)
+    })
+    if ( cardl.length == 3) return true;
     return false;
   }
 
